@@ -2,5 +2,6 @@
     "java.project.sourcePaths": [
         "demo/src/main/java"
     ],
-    "java.project.referencedLibraries": []
+    "java.project.referencedLibraries": [],
+    "java.debug.settings.onBuildFailureProceed": true
 }

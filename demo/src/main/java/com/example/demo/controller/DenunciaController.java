@@ -70,7 +70,7 @@ public class DenunciaController {
 
     @SuppressWarnings("null")
     @Operation(summary = "Busca uma denuncia por texto", description = "Retorna os detalhes de uma denuncia")
-    @GetMapping("/{id}")
+    @GetMapping("/buscar/texto")
     public ResponseEntity<List<DenunciaDTO>> buscarPorTipoResiduo(@PathVariable String tipoResiduo)
     {
 
@@ -88,8 +88,8 @@ public class DenunciaController {
     }
 
     @SuppressWarnings("null")
-    @Operation(summary = "Busca uma denuncia por texto", description = "Retorna os detalhes de uma denuncia")
-    @GetMapping("/{id}")
+    @Operation(summary = "Busca uma denuncia por grau de perigo", description = "Retorna os detalhes de uma denuncia")
+    @GetMapping("/buscar/grau_perigo")
     public ResponseEntity<List<DenunciaDTO>> buscarPorGrauPerigo(@PathVariable String grauPerigo)
     {
 

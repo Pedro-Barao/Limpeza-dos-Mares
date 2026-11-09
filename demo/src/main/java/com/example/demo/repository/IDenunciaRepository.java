@@ -2,17 +2,18 @@ package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.dto.DenunciaDTO;
 import com.example.demo.entities.Denuncia;
-import java.util.List;
+import com.example.demo.enums.TipoResiduo;
+import com.example.demo.enums.GrauPerigo;
 
+import java.util.List;
 
 public interface IDenunciaRepository extends JpaRepository<Denuncia, Long> {
 
-    List<DenunciaDTO> findByTextoContainingIgnoreCase(String texto);
+    List<Denuncia> findByTextoContainingIgnoreCase(String texto);
 
-    List<DenunciaDTO> findByTipoResiduoContainingIgnoreCase(String tipoResiduo);
+    List<Denuncia> findByTipoResiduo(TipoResiduo tipoResiduo);
 
-    List<DenunciaDTO> findByGrauPerigoContainingIgnoreCase(String grauPerigo);
+    List<Denuncia> findByGrauPerigo(GrauPerigo grauPerigo);
 
 }
