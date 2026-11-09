@@ -1,10 +1,11 @@
 package com.example.demo.dto;
 
-import com.example.demo.entities.Estado;
+
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -30,7 +31,9 @@ public class EnderecoDTO {
     @Size(min = 2, max = 60, message = "A ciade deve ter obrigatóriamente entre 2 e 60 caracteres")
     private String cidade;
 
-    @NotNull(message = "")
-    private Estado estado;
+    private String complemento;
+
+    @NotNull(message = "O estado é obrigatório")
+    private EstadoDTO estado;
 
 }

@@ -2,8 +2,8 @@ package com.example.demo.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entities.Estado;
+import com.example.demo.entities.Endereco;
 
-public interface IEnderecoRepository extends JpaRepository<Estado, Long>{
+public interface IEnderecoRepository extends JpaRepository<Endereco, Long>{
     
 }

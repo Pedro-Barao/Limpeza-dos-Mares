@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor 
 public class DenunciaDTO {
     
-    private Long Denuncia_Id;
+    private Long id;
 
     @NotBlank(message = "O texto de denuncia é obrigatório")
     @Size(min = 20, max = 500, message = "A quantidade de caracteres presentes no campo deve ser entre 20 e 500")

@@ -3,7 +3,6 @@ package com.example.demo.mapper;
 import java.util.List;
 
 import org.mapstruct.Mapper;
-
 import com.example.demo.dto.DenunciaDTO;
 import com.example.demo.entities.Denuncia;
 
