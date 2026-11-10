@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Denúncia anônima · Limpeza dos Mares</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="barra-simples">
+    <div class="container">
+      <a class="voltar" href="index.html"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3 5 8l5 5"/></svg> Voltar</a>
+      <a class="marca" href="index.html"><span class="marca-icone" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 6.5c1.5-1.2 2.5-1.2 4 0s2.5 1.2 4 0 2.5-1.2 4 0M2 10.5c1.5-1.2 2.5-1.2 4 0s2.5 1.2 4 0 2.5-1.2 4 0"/></svg></span> Limpeza dos Mares</a>
+    </div>
+  </header>
+
+  <main class="denuncia">
+    <p class="eyebrow">Denúncia anônima</p>
+    <h1>Viu esgoto sendo despejado? Conte pra gente.</h1>
+    <p class="privacidade">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5.5 7V5a2.5 2.5 0 0 1 5 0v2"/></svg>
+      Não pedimos nome, e-mail nem cadastro.
+    </p>
+
+    <form class="form-cartao" id="form-denuncia" novalidate>
+      <fieldset>
+        <legend>1. Onde aconteceu? <span class="obrig" aria-hidden="true">*</span></legend>
+        <button type="button" class="btn-local" id="btn-local">
+          <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="3"/><path d="M8 1v3M8 12v3M1 8h3M12 8h3"/></svg>
+          Usar minha localização
+        </button>
+        <p class="status-local" id="status-local" role="status"></p>
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+        <label class="sub-rotulo" for="referencia">Ponto de referência (opcional)</label>
+        <input class="campo" id="referencia" name="pontoReferencia" type="text" placeholder="Ex.: Praia X, próximo ao quiosque 3">
+        <p class="erro" id="erro-local"></p>
+      </fieldset>
+
+      <fieldset>
+        <label class="rotulo" for="tipo">2. Que tipo de esgoto?</label>
+        <select class="campo" id="tipo" name="tipoEsgoto">
+          <option value="">Selecione</option>
+          <option value="DOMESTICO">Doméstico</option>
+          <option value="INDUSTRIAL">Industrial</option>
+          <option value="NAO_SEI">Não sei informar</option>
+        </select>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Qual o grau de perigo? <span class="obrig" aria-hidden="true">*</span></legend>
+        <div class="perigos">
+          <div class="perigo"><input type="radio" name="periculosidade" id="p-baixo" value="BAIXO"><label for="p-baixo"><strong>Baixo</strong><span>Pouco volume, sem cheiro forte</span></label></div>
+          <div class="perigo"><input type="radio" name="periculosidade" id="p-medio" value="MEDIO"><label for="p-medio"><strong>Médio</strong><span>Volume visível, cheiro e cor</span></label></div>
+          <div class="perigo"><input type="radio" name="periculosidade" id="p-alto" value="ALTO"><label for="p-alto"><strong>Alto</strong><span>Químicos, espuma ou animais mortos</span></label></div>
+        </div>
+        <p class="erro" id="erro-perigo"></p>
+      </fieldset>
+
+      <fieldset>
+        <label class="rotulo" for="descricao">4. O que você viu?</label>
+        <textarea class="campo" id="descricao" name="descricao" maxlength="100" placeholder="Ex.: Cano despejando líquido escuro direto no mar"></textarea>
+        <div class="contagem"><span>Mínimo de 20 caracteres</span><span id="contador">0/100</span></div>
+        <p class="erro" id="erro-descricao"></p>
+      </fieldset>
+
+      <label class="confirma"><input type="checkbox" id="confirma"> Confirmo que as informações são verdadeiras.</label>
+      <p class="erro" id="erro-confirma"></p>
+
+      <button class="btn btn-alerta btn-bloco" type="submit">Enviar denúncia</button>
+      <p class="sucesso" id="sucesso" role="status" hidden></p>
+    </form>
+  </main>
+  <script src="js/denuncia.js"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel · Limpeza dos Mares</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="painel">
+  <header class="painel-topo">
+    <div class="container">
+      <a class="marca" href="index.html"><span class="marca-icone" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M2 6.5c1.5-1.2 2.5-1.2 4 0s2.5 1.2 4 0 2.5-1.2 4 0M2 10.5c1.5-1.2 2.5-1.2 4 0s2.5 1.2 4 0 2.5-1.2 4 0"/></svg></span> Limpeza dos Mares <span class="selo">Painel</span></a>
+      <div class="usuario">
+        <span>[Nome do usuário] · Órgão Ambiental</span>
+        <button class="btn-sair" type="button">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="painel-main">
+    <div class="painel-cab">
+      <div>
+        <h1>Denúncias</h1>
+        <p>Analise, encaminhe ao responsável e atualize o status.</p>
+      </div>
+      <div class="acoes">
+        <span class="aviso-exemplo">Dados de exemplo</span>
+        <button class="btn btn-teal" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg> Nova destinadora</button>
+      </div>
+    </div>
+
+    <div class="resumo" id="resumo" role="group" aria-label="Filtrar por status">
+      <button type="button" data-filtro="todas" aria-pressed="true"><span>Todas</span><strong id="n-todas">0</strong></button>
+      <button type="button" data-filtro="pendente" aria-pressed="false"><span>Pendentes</span><strong id="n-pendente">0</strong></button>
+      <button type="button" data-filtro="analise" aria-pressed="false"><span>Em análise</span><strong id="n-analise">0</strong></button>
+      <button type="button" data-filtro="resolvido" aria-pressed="false"><span>Resolvidas</span><strong id="n-resolvido">0</strong></button>
+    </div>
+
+    <div class="filtros">
+      <div><label for="busca">Buscar</label><input class="campo" id="busca" type="search" placeholder="Protocolo ou ponto de referência"></div>
+      <div><label for="f-perigo">Periculosidade</label>
+        <select class="campo" id="f-perigo"><option value="">Todas</option><option value="alto">Alto</option><option value="medio">Médio</option><option value="baixo">Baixo</option></select></div>
+      <div><label for="f-tipo">Tipo de esgoto</label>
+        <select class="campo" id="f-tipo"><option value="">Todos</option><option>Industrial</option><option>Doméstico</option><option>Não sei informar</option></select></div>
+    </div>
+
+    <div class="painel-grade">
+      <div class="tabela-wrap">
+        <table>
+          <thead><tr><th>Protocolo</th><th>Local</th><th>Tipo</th><th>Perigo</th><th>Status</th><th>Encaminhada a</th></tr></thead>
+          <tbody id="lista"></tbody>
+        </table>
+        <p class="vazio" id="vazio" hidden>Nenhuma denúncia encontrada com esses filtros.</p>
+      </div>
+
+      <aside class="detalhe" id="detalhe" aria-live="polite"></aside>
+    </div>
+  </main>
+  <script src="js/admin.js"></script>
+</body>
+</html>
