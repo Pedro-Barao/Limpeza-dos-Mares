@@ -47,6 +47,54 @@ public class EnderecoService {
 
     }
 
+    public List<EnderecoDTO> buscaPorLogradouro(@NonNull String logradouro) 
+    {
+
+        List<EnderecoDTO> enderecos = enderecoRepository.findByLogradouroContainingIgnoreCase(logradouro);
+
+        if(enderecos.isEmpty())
+        {
+
+            throw new RuntimeException("\nNenhum endereco encontrado com o logradouro: " + logradouro);
+
+        }
+
+        return enderecos;
+
+    }
+
+    public List<EnderecoDTO> buscaPorBairro(@NonNull String bairro) 
+    {
+
+        List<EnderecoDTO> enderecos = enderecoRepository.findByBairroContainingIgnoreCase(bairro);
+
+        if(enderecos.isEmpty())
+        {
+
+            throw new RuntimeException("\nNenhum endereco encontrado com o bairro: " + bairro);
+
+        }
+
+        return enderecos;
+
+    }
+
+    public List<EnderecoDTO> buscaPorCidade(@NonNull String cidade) 
+    {
+
+        List<EnderecoDTO> enderecos = enderecoRepository.findByCidadeContainingIgnoreCase(cidade);
+
+        if(enderecos.isEmpty())
+        {
+
+            throw new RuntimeException("\nNenhum endereco encontrado com o cidade: " + cidade);
+
+        }
+
+        return enderecos;
+
+    }
+
     @SuppressWarnings("null")
     public EnderecoDTO salvar(EnderecoDTO enderecoDTO) 
     {

@@ -12,4 +12,10 @@ public interface IEnderecoRepository extends JpaRepository<Endereco, Long>{
     
     List<EnderecoDTO> findByCepContainingIgnoreCase(String cep);
 
+    List<EnderecoDTO> findByLogradouroContainingIgnoreCase(String logradouro);
+
+    List<EnderecoDTO> findByBairroContainingIgnoreCase(String bairro);
+
+    List<EnderecoDTO> findByCidadeContainingIgnoreCase(String cidade);
+
 }

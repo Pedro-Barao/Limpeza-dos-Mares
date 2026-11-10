@@ -18,7 +18,7 @@ public class EnderecoDTO {
     @NotBlank(message = "O CEP é obrigatório")
     @Size(min = 9, max = 9, message = "O CEP tem que ter obrigatóriamente 9 dígitos")
     private String cep;
-
+    
     @NotBlank(message = "O logradouro é obrigatório")
     @Size(min = 2, max = 80, message = "O logradouro deve ter obrigatóriamente entre 2 e 80 caracteres")
     private String logradouro;
