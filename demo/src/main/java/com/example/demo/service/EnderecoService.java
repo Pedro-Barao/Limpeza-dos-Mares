@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
@@ -32,10 +31,19 @@ public class EnderecoService {
 
     }
 
-    public Optional<EnderecoDTO> buscaPorId(@NonNull Long id) 
+    public List<EnderecoDTO> buscaPorCep(@NonNull String cep) 
     {
 
-        return enderecoRepository.findById(id).map(enderecoMapper::toDTO);
+        List<EnderecoDTO> enderecos = enderecoRepository.findByCepContainingIgnoreCase(cep);
+
+        if(enderecos.isEmpty())
+        {
+
+            throw new RuntimeException("\nNenhum endereco encontrado com o CEP: " + cep);
+
+        }
+
+        return enderecos;
 
     }
 
@@ -114,4 +122,5 @@ public class EnderecoService {
         enderecoRepository.delete(enderecoDeletado);
 
     }
+    
 }
