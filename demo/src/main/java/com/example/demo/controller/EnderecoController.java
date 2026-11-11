@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.EnderecoDTO;
 import com.example.demo.service.EnderecoService;
 import com.example.demo.service.Utils.ApiResponse;
-import com.example.demo.service.Utils.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,85 +41,47 @@ public class EnderecoController {
     @GetMapping
     public ResponseEntity<List<EnderecoDTO>> listarEnderecos() {
 
-        List<EnderecoDTO> enderecos = enderecoService.listarTodos();
-
-        return ResponseEntity.ok(enderecos);
+        return ResponseEntity.ok(enderecoService.listarTodos());
 
     }
 
-    @SuppressWarnings("null")
+    @Operation(summary = "Busca um endereço por ID", description = "Retorna os detalhes de um endereço")
+    @GetMapping("/{id}")
+    public ResponseEntity<EnderecoDTO> buscarPorId(@PathVariable Long id) {
+
+        return ResponseEntity.ok(enderecoService.buscaPorId(id));
+
+    }
+
     @Operation(summary = "Busca endereços por CEP", description = "Retorna os endereços correspondentes ao CEP informado")
     @GetMapping("/buscar/cep/{cep}")
     public ResponseEntity<List<EnderecoDTO>> buscarPorCep(@PathVariable String cep) {
 
-        try {
-
-            List<EnderecoDTO> endereco = enderecoService.buscaPorCep(cep);
-
-            return ResponseEntity.ok(endereco);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.notFound().build();
-
-        }
+        return ResponseEntity.ok(enderecoService.buscaPorCep(cep));
 
     }
 
-    @SuppressWarnings("null")
     @Operation(summary = "Busca endereços por logradouro", description = "Retorna os endereços correspondentes ao logradouro informado")
     @GetMapping("/buscar/logradouro/{logradouro}")
     public ResponseEntity<List<EnderecoDTO>> buscarPorLogradouro(@PathVariable String logradouro) {
 
-        try {
-
-            List<EnderecoDTO> endereco = enderecoService.buscaPorLogradouro(logradouro);
-
-            return ResponseEntity.ok(endereco);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.notFound().build();
-
-        }
+        return ResponseEntity.ok(enderecoService.buscaPorLogradouro(logradouro));
 
     }
 
-    @SuppressWarnings("null")
     @Operation(summary = "Busca endereços por bairro", description = "Retorna os endereços correspondentes ao bairro informado")
     @GetMapping("/buscar/bairro/{bairro}")
     public ResponseEntity<List<EnderecoDTO>> buscarPorBairro(@PathVariable String bairro) {
 
-        try {
-
-            List<EnderecoDTO> endereco = enderecoService.buscaPorBairro(bairro);
-
-            return ResponseEntity.ok(endereco);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.notFound().build();
-
-        }
+        return ResponseEntity.ok(enderecoService.buscaPorBairro(bairro));
 
     }
 
-    @SuppressWarnings("null")
     @Operation(summary = "Busca endereços por cidade", description = "Retorna os endereços correspondentes à cidade informada")
     @GetMapping("/buscar/cidade/{cidade}")
     public ResponseEntity<List<EnderecoDTO>> buscarPorCidade(@PathVariable String cidade) {
 
-        try {
-
-            List<EnderecoDTO> endereco = enderecoService.buscaPorCidade(cidade);
-
-            return ResponseEntity.ok(endereco);
-
-        } catch (RuntimeException e) {
-
-            return ResponseEntity.notFound().build();
-
-        }
+        return ResponseEntity.ok(enderecoService.buscaPorCidade(cidade));
 
     }
 
@@ -128,95 +89,29 @@ public class EnderecoController {
     @PostMapping
     public ResponseEntity<ApiResponse<EnderecoDTO>> cadastrarEndereco(@Valid @RequestBody EnderecoDTO enderecoDTO) {
 
-        try {
+        EnderecoDTO novoEndereco = enderecoService.salvar(enderecoDTO);
 
-            EnderecoDTO novoEndereco = enderecoService.salvar(enderecoDTO);
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(novoEndereco);
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
-
-        } catch (RuntimeException e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Erro ao cadastrar endereço", e.getMessage());
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-
-        } catch (Exception e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Erro interno", e.getMessage());
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-
-        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(novoEndereco));
 
     }
 
-    @Operation(summary = "Altera um endereço", description = "Altera um endereço no sistema")
+    @Operation(summary = "Altera um endereço", description = "Altera todos os dados de um endereço no sistema")
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<EnderecoDTO>> alterarEndereco(@PathVariable Long id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
 
-        try {
+        EnderecoDTO enderecoAtualizado = enderecoService.atualizar(id, enderecoDTO);
 
-            EnderecoDTO novoEndereco = enderecoService.atualizar(id, enderecoDTO);
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(novoEndereco);
-
-            return ResponseEntity.ok(response);
-
-        } catch (RuntimeException e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Endereço não encontrado", e.getMessage());
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
-        } catch (Exception e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Erro interno", e.getMessage());
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-
-        }
+        return ResponseEntity.ok(new ApiResponse<>(enderecoAtualizado));
 
     }
 
-    @Operation(summary = "Altera parcialmente um endereço", description = "Altera parcialmente um endereço no sistema")
+    @Operation(summary = "Altera parcialmente um endereço", description = "Altera apenas os campos enviados de um endereço")
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<EnderecoDTO>> alterarParcialmenteEndereco(@PathVariable Long id, @Valid @RequestBody EnderecoDTO enderecoDTO) {
+    public ResponseEntity<ApiResponse<EnderecoDTO>> alterarParcialmenteEndereco(@PathVariable Long id, @RequestBody EnderecoDTO enderecoDTO) {
 
-        try {
+        EnderecoDTO enderecoAtualizado = enderecoService.atualizarParcialmente(id, enderecoDTO);
 
-            EnderecoDTO novoEndereco = enderecoService.atualizarParcialmente(id, enderecoDTO);
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(novoEndereco);
-
-            return ResponseEntity.ok(response);
-
-        } catch (RuntimeException e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Endereço não encontrado", e.getMessage());
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
-        } catch (Exception e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Erro interno", e.getMessage());
-
-            ApiResponse<EnderecoDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-
-        }
+        return ResponseEntity.ok(new ApiResponse<>(enderecoAtualizado));
 
     }
 

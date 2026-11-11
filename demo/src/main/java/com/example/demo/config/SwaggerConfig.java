@@ -29,11 +29,11 @@ public class SwaggerConfig implements WebMvcConfigurer {
 
         return openApi -> {
 
-            openApi.getInfo().setTitle("Refacção do Seminário 3 ADS/ESW");
+            openApi.getInfo().setTitle("Limpeza dos Mares");
 
-            openApi.getInfo().setVersion("2.0.0"); 
-            
-            openApi.getInfo().setDescription("API de gerenciamento de cotação de aviação.");
+            openApi.getInfo().setVersion("1.0.0");
+
+            openApi.getInfo().setDescription("API para registro e gerenciamento de denúncias de resíduos no mar.");
 
         };
 

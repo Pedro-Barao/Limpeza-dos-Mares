@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.dto.DenunciaDTO;
 import com.example.demo.service.DenunciaService;
 import com.example.demo.service.Utils.ApiResponse;
-import com.example.demo.service.Utils.ErrorResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,7 +28,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/denuncias")
 @CrossOrigin("*")
 public class DenunciaController {
-    
+
     private final DenunciaService denunciaService;
 
     public DenunciaController(DenunciaService denunciaService)
@@ -42,136 +42,80 @@ public class DenunciaController {
     @GetMapping
     public ResponseEntity<List<DenunciaDTO>> listarDenuncias()
     {
-        
-        List<DenunciaDTO> denuncias = denunciaService.listarTodos();
 
-        return ResponseEntity.ok(denuncias);
+        return ResponseEntity.ok(denunciaService.listarTodos());
 
     }
 
-    @SuppressWarnings("null")
-    @Operation(summary = "Busca uma denuncia por texto", description = "Retorna os detalhes de uma denuncia")
+    @Operation(summary = "Busca uma denuncia por ID", description = "Retorna os detalhes de uma denuncia")
     @GetMapping("/{id}")
+    public ResponseEntity<DenunciaDTO> buscarPorId(@PathVariable Long id)
+    {
+
+        return ResponseEntity.ok(denunciaService.buscaPorId(id));
+
+    }
+
+    @Operation(summary = "Busca denuncias por texto", description = "Retorna as denuncias cujo texto contém o termo informado")
+    @GetMapping("/buscar/texto/{texto}")
     public ResponseEntity<List<DenunciaDTO>> buscarPorTexto(@PathVariable String texto)
     {
 
-        List<DenunciaDTO> denuncia = denunciaService.buscaPorTexto(texto);
+        return ResponseEntity.ok(denunciaService.buscaPorTexto(texto));
 
-        if(denuncia.isEmpty())
-        {
-
-            return ResponseEntity.notFound().build();
-
-        }
-
-        return ResponseEntity.ok(denuncia);
-        
     }
 
-    @SuppressWarnings("null")
-    @Operation(summary = "Busca uma denuncia por texto", description = "Retorna os detalhes de uma denuncia")
-    @GetMapping("/buscar/texto")
+    @Operation(summary = "Busca denuncias por tipo de resíduo", description = "Valores aceitos: SOLIDO, LIQUIDO, PASTOSO")
+    @GetMapping("/buscar/tipo_residuo/{tipoResiduo}")
     public ResponseEntity<List<DenunciaDTO>> buscarPorTipoResiduo(@PathVariable String tipoResiduo)
     {
 
-        List<DenunciaDTO> denuncia = denunciaService.buscaPorTipoResiduo(tipoResiduo);
+        return ResponseEntity.ok(denunciaService.buscaPorTipoResiduo(tipoResiduo));
 
-        if(denuncia.isEmpty())
-        {
-
-            return ResponseEntity.notFound().build();
-
-        }
-
-        return ResponseEntity.ok(denuncia);
-        
     }
 
-    @SuppressWarnings("null")
-    @Operation(summary = "Busca uma denuncia por grau de perigo", description = "Retorna os detalhes de uma denuncia")
-    @GetMapping("/buscar/grau_perigo")
+    @Operation(summary = "Busca denuncias por grau de perigo", description = "Valores aceitos: BAIXO, MEDIO, ALTO")
+    @GetMapping("/buscar/grau_perigo/{grauPerigo}")
     public ResponseEntity<List<DenunciaDTO>> buscarPorGrauPerigo(@PathVariable String grauPerigo)
     {
 
-        List<DenunciaDTO> denuncia = denunciaService.buscaPorTexto(grauPerigo);
+        return ResponseEntity.ok(denunciaService.buscaPorGrauPerigo(grauPerigo));
 
-        if(denuncia.isEmpty())
-        {
-
-            return ResponseEntity.notFound().build();
-
-        }
-
-        return ResponseEntity.ok(denuncia);
-        
     }
 
-    @Operation(summary = "Altera uma denuncia", description = "Altera uma denuncia no sistema")
+    @Operation(summary = "Cadastra uma denuncia", description = "Registra uma nova denuncia no sistema")
+    @PostMapping
+    public ResponseEntity<ApiResponse<DenunciaDTO>> cadastrarDenuncia(@Valid @RequestBody DenunciaDTO denunciaDTO)
+    {
+
+        DenunciaDTO novaDenuncia = denunciaService.salvar(denunciaDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ApiResponse<>(novaDenuncia));
+
+    }
+
+    @Operation(summary = "Altera uma denuncia", description = "Altera todos os dados de uma denuncia no sistema")
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<DenunciaDTO>> alterarCliente(@PathVariable Long id, @Valid @RequestBody DenunciaDTO denunciaDTO)
+    public ResponseEntity<ApiResponse<DenunciaDTO>> alterarDenuncia(@PathVariable Long id, @Valid @RequestBody DenunciaDTO denunciaDTO)
     {
 
-        try {
+        DenunciaDTO denunciaAtualizada = denunciaService.atualizar(id, denunciaDTO);
 
-            DenunciaDTO novaDenuncia = denunciaService.atualizar(id, denunciaDTO);
-
-            ApiResponse<DenunciaDTO> response = new ApiResponse<>(novaDenuncia);
-
-            return ResponseEntity.ok(response);
-
-        } catch (RuntimeException e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Cliente não encontrado", e.getMessage());
-
-            ApiResponse<DenunciaDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
-        } catch (Exception e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Erro interno", e.getMessage());
-
-            ApiResponse<DenunciaDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-
-        }
+        return ResponseEntity.ok(new ApiResponse<>(denunciaAtualizada));
 
     }
 
-    @Operation(summary = "Altera um denuncia", description = "Altera um denuncia no sistema")
+    @Operation(summary = "Altera parcialmente uma denuncia", description = "Altera apenas os campos enviados de uma denuncia")
     @PatchMapping("/{id}")
-    public ResponseEntity<ApiResponse<DenunciaDTO>> alterarParcialmenteCliente(@PathVariable Long id, @Valid @RequestBody DenunciaDTO denunciaDTO)
+    public ResponseEntity<ApiResponse<DenunciaDTO>> alterarParcialmenteDenuncia(@PathVariable Long id, @RequestBody DenunciaDTO denunciaDTO)
     {
 
-        try {
+        DenunciaDTO denunciaAtualizada = denunciaService.atualizarParcialmente(id, denunciaDTO);
 
-            DenunciaDTO novaDenuncia = denunciaService.atualizarParcialmente(id, denunciaDTO);
-
-            ApiResponse<DenunciaDTO> response = new ApiResponse<>(novaDenuncia);
-
-            return ResponseEntity.ok(response);
-
-        } catch (RuntimeException e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Cliente não encontrado", e.getMessage());
-
-            ApiResponse<DenunciaDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-
-        } catch (Exception e) {
-
-            ErrorResponse errorResponse = new ErrorResponse("Erro interno", e.getMessage());
-
-            ApiResponse<DenunciaDTO> response = new ApiResponse<>(errorResponse);
-
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
-
-        }
+        return ResponseEntity.ok(new ApiResponse<>(denunciaAtualizada));
 
     }
-    
+
     @Operation(summary = "Deleta uma denuncia", description = "Remove uma denuncia do sistema pelo id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarDenuncia(@PathVariable Long id)

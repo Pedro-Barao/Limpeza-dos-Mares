@@ -3,5 +3,7 @@
         "demo/src/main/java"
     ],
     "java.project.referencedLibraries": [],
-    "java.debug.settings.onBuildFailureProceed": true
+    "java.debug.settings.onBuildFailureProceed": true,
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

@@ -1,23 +1,24 @@
 package com.example.demo.service;
 
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.dto.EstadoDTO;
 import com.example.demo.entities.Estado;
+import com.example.demo.exception.RecursoNaoEncontradoException;
 import com.example.demo.mapper.EstadoMapper;
 import com.example.demo.repository.IEstadoRepository;
 
 @Service
+@SuppressWarnings("null")
 public class EstadoService {
 
     private final IEstadoRepository estadoRepository;
     private final EstadoMapper estadoMapper;
-    
-    public EstadoService(IEstadoRepository estadoRepository, EstadoMapper estadoMapper) 
+
+    public EstadoService(IEstadoRepository estadoRepository, EstadoMapper estadoMapper)
     {
 
         this.estadoRepository = estadoRepository;
@@ -25,86 +26,107 @@ public class EstadoService {
 
     }
 
-    public List<EstadoDTO> listarTodos() 
+    public List<EstadoDTO> listarTodos()
     {
 
         return estadoMapper.toDTOList(estadoRepository.findAll());
 
     }
 
-    public Optional<EstadoDTO> buscaPorId(@NonNull Long id) 
+    public EstadoDTO buscaPorId(Long id)
     {
 
-        return estadoRepository.findById(id).map(estadoMapper::toDTO);
+        return estadoMapper.toDTO(buscarEntidade(id));
 
     }
 
-    @SuppressWarnings("null")
-    public EstadoDTO salvar(EstadoDTO estadoDTO) 
+    @Transactional
+    public EstadoDTO salvar(EstadoDTO estadoDTO)
     {
 
-        if (estadoDTO == null) 
+        if (estadoDTO == null)
         {
 
-            throw new IllegalArgumentException("\nO estado não pode ser nulo");
+            throw new IllegalArgumentException("O estado não pode ser nulo");
 
         }
 
         Estado estado = estadoMapper.toEntity(estadoDTO);
 
+        estado.setSigla(estado.getSigla().toUpperCase());
+
         return estadoMapper.toDTO(estadoRepository.save(estado));
 
     }
 
-    @SuppressWarnings("null")
-    public EstadoDTO atualizar(Long id, EstadoDTO estadoDTO) 
+    @Transactional
+    public EstadoDTO atualizar(Long id, EstadoDTO estadoDTO)
     {
 
-        if (estadoDTO == null) 
+        if (estadoDTO == null)
         {
 
-            throw new IllegalArgumentException("\nO estado não pode ser nulo");
+            throw new IllegalArgumentException("O estado não pode ser nulo");
 
         }
 
-        Estado estadoAtualizado = estadoRepository.findById(id).orElseThrow(() -> new RuntimeException("\nEstado não encontrado com o id: " + id));
-
+        Estado estadoAtualizado = buscarEntidade(id);
 
         estadoAtualizado.setNome(estadoDTO.getNome());
-        estadoAtualizado.setSigla(estadoDTO.getSigla());
+        estadoAtualizado.setSigla(estadoDTO.getSigla().toUpperCase());
 
         return estadoMapper.toDTO(estadoRepository.save(estadoAtualizado));
 
     }
 
-    @SuppressWarnings("null")
-    public EstadoDTO atualizarParcialmente(Long id, EstadoDTO estadoDTO) 
+    @Transactional
+    public EstadoDTO atualizarParcialmente(Long id, EstadoDTO estadoDTO)
     {
 
-        if (estadoDTO == null) 
+        if (estadoDTO == null)
         {
 
-            throw new IllegalArgumentException("\nO estado não pode ser nulo");
+            throw new IllegalArgumentException("O estado não pode ser nulo");
 
         }
 
-        Estado estadoAtualizado = estadoRepository.findById(id).orElseThrow(() -> new RuntimeException("\nEstado não encontrado com o id: " + id));
+        Estado estadoAtualizado = buscarEntidade(id);
 
         if(estadoDTO.getNome() != null) { estadoAtualizado.setNome(estadoDTO.getNome()); }
-        if(estadoDTO.getSigla() != null) { estadoAtualizado.setSigla(estadoDTO.getSigla()); }
+
+        if(estadoDTO.getSigla() != null)
+        {
+
+            // Sem @Valid no PATCH, então o tamanho da sigla é validado aqui
+            if(estadoDTO.getSigla().trim().length() != 2)
+            {
+
+                throw new IllegalArgumentException("A sigla deve ter exatamente 2 letras");
+
+            }
+
+            estadoAtualizado.setSigla(estadoDTO.getSigla().trim().toUpperCase());
+
+        }
 
         return estadoMapper.toDTO(estadoRepository.save(estadoAtualizado));
 
     }
 
-    @SuppressWarnings("null")
-    public void deletar(Long id) 
+    @Transactional
+    public void deletar(Long id)
     {
 
-        Estado estadoDeletado = estadoRepository.findById(id).orElseThrow(() -> new RuntimeException("\nEstado não encontrado com o id: " + id));
-
-        estadoRepository.delete(estadoDeletado);
+        estadoRepository.delete(buscarEntidade(id));
 
     }
-    
+
+    private Estado buscarEntidade(Long id)
+    {
+
+        return estadoRepository.findById(id)
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Estado não encontrado com o id: " + id));
+
+    }
+
 }
